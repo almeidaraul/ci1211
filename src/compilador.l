@@ -105,6 +105,20 @@ end { simbolo = simb_end;
           return IDENT;
         }
 
+//TODO
+//label
+//type
+//array .. of
+//procedure
+//function
+//[ ]
+//[var]
+//goto
+//if .. then .. else (else opcional)
+//while .. do
+//or and not
+//+ - * / div 
+//{ }
 
 %%
 
