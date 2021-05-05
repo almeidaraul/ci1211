@@ -189,18 +189,80 @@ goto { simbolo = simb_goto;
        return FECHA_CHAVES;
        }
 
+array { simbolo = simb_array;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" array ");
+       return ARRAY;
+       }
+
+of { simbolo = simb_of;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" of ");
+       return OF;
+       }
+
+if { simbolo = simb_if;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" if ");
+       return IF;
+       }
+
+then { simbolo = simb_then;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" then ");
+       return THEN;
+       }
+
+else { simbolo = simb_else;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" else ");
+       return ELSE;
+       }
+
+while { simbolo = simb_while;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" while ");
+       return WHILE;
+       }
+
+do { simbolo = simb_do;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" do ");
+       return DO;
+       }
+
+or { simbolo = simb_or;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" or ");
+       return or;
+       }
+
+and { simbolo = simb_and;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" and ");
+       return AND;
+       }
+
+not { simbolo = simb_not;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" not ");
+       return NOT;
+       }
+
 //TODO
+//ver se if e else são reservadas, bem como IF e ELSE
+//msm coisa pra do e DO, or, and, not, OR, AND, NOT
 //X label
 //X type
-//array .. of
+//X array .. of
 //X procedure
 //X function
 //X [ ]
 //[var]
 //X goto
-//if .. then .. else (else opcional)
-//while .. do
-//or and not
+//X if .. then .. else (else opcional)
+//X while .. do
+//X or and not
 //X + - * / div 
 //X { }
 
