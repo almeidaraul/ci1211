@@ -1,2 +1,2 @@
 # ci1211
-Trabalho da disciplina de construção de compiladores
+Compilador de um subconjunto da linguagem Pascal
