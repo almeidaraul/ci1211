@@ -105,20 +105,104 @@ end { simbolo = simb_end;
           return IDENT;
         }
 
+label { simbolo = simb_label;
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME(" label ");
+        return LABEL;
+        }
+
+type { simbolo = simb_type;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" type ");
+       return TYPE;
+       }
+
+procedure { simbolo = simb_procedure;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" procedure ");
+       return PROCEDURE;
+       }
+
+function { simbolo = simb_function;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" function ");
+       return FUNCTION;
+       }
+
+goto { simbolo = simb_goto;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" goto ");
+       return GOTO;
+       }
+
+\+ { simbolo = simb_adicao;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" adicao ");
+       return ;
+       }
+
+\- { simbolo = simb_subtracao;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" subtracao ");
+       return SUBTRACAO;
+       }
+
+\* { simbolo = simb_multiplicacao;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" multiplicacao ");
+       return MULTIPLICACAO;
+       }
+
+\/ { simbolo = simb_divisao;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" divisao ");
+       return DIVISAO;
+       }
+
+\div { simbolo = simb_divisao_inteira;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" divisao_inteira ");
+       return DIVISAO_INTEIRA;
+       }
+      
+\[ { simbolo = simb_abre_colchetes;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" abre_colchetes ");
+       return ABRE_COLCHETES;
+       }
+
+\] { simbolo = simb_fecha_colchetes;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" fecha_colchetes ");
+       return FECHA_COLCHETES;
+       }
+
+\{ { simbolo = simb_abre_chaves;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" abre_chaves ");
+       return ABRE_CHAVES;
+       }
+
+\} { simbolo = simb_fecha_chaves;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" fecha_chaves ");
+       return FECHA_CHAVES;
+       }
+
 //TODO
-//label
-//type
+//X label
+//X type
 //array .. of
-//procedure
-//function
-//[ ]
+//X procedure
+//X function
+//X [ ]
 //[var]
-//goto
+//X goto
 //if .. then .. else (else opcional)
 //while .. do
 //or and not
-//+ - * / div 
-//{ }
+//X + - * / div 
+//X { }
 
 %%
 
