@@ -249,5 +249,11 @@ not { simbolo = simb_not;
        return NOT;
        }
 
+\.\. { simbolo = simb_pontos;
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME(" pontos ");
+        return PONTOS;
+        }
+
 %%
 
