@@ -249,22 +249,5 @@ not { simbolo = simb_not;
        return NOT;
        }
 
-//TODO
-//ver se if e else são reservadas, bem como IF e ELSE
-//msm coisa pra do e DO, or, and, not, OR, AND, NOT
-//X label
-//X type
-//X array .. of
-//X procedure
-//X function
-//X [ ]
-//[var]
-//X goto
-//X if .. then .. else (else opcional)
-//X while .. do
-//X or and not
-//X + - * / div 
-//X { }
-
 %%
 
