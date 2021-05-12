@@ -219,5 +219,47 @@ not { simbolo = simb_not;
        return NOT;
        }
 
+mod { simbolo = simb_mod;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" mod ");
+       return MOD;
+       }
+
+\= { simbolo = simb_igual;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" igual ");
+       return IGUAL;
+       }
+
+\< { simbolo = simb_menor;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" menor ");
+       return MENOR;
+       }
+
+\> { simbolo = simb_maior;
+       strncpy (token, yytext, TAM_TOKEN);
+       IMPRIME(" maior ");
+       return MAIOR;
+       }
+
+\<= { simbolo = simb_menor_ou_igual;
+			strncpy (token, yytext, TAM_TOKEN);
+			IMRPIME(" menor ou igual ");
+			return MENOR_OU_IGUAL;
+		}
+
+\>= { simbolo = simb_maior_ou_igual;
+			strncpy (token, yytext, TAM_TOKEN);
+			IMRPIME(" maior ou igual ");
+			return MAIOR_OU_IGUAL;
+		}
+
+\<> { simbolo = simb_diferente;
+			strncpy (token, yytext, TAM_TOKEN);
+			IMRPIME(" diferente ");
+			return DIFERENTE;
+		}
+
 %%
 
