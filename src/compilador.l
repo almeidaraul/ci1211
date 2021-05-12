@@ -111,12 +111,6 @@ label { simbolo = simb_label;
         return LABEL;
         }
 
-type { simbolo = simb_type;
-       strncpy (token, yytext, TAM_TOKEN);
-       IMPRIME(" type ");
-       return TYPE;
-       }
-
 procedure { simbolo = simb_procedure;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" procedure ");
@@ -189,18 +183,6 @@ goto { simbolo = simb_goto;
        return FECHA_CHAVES;
        }
 
-array { simbolo = simb_array;
-       strncpy (token, yytext, TAM_TOKEN);
-       IMPRIME(" array ");
-       return ARRAY;
-       }
-
-of { simbolo = simb_of;
-       strncpy (token, yytext, TAM_TOKEN);
-       IMPRIME(" of ");
-       return OF;
-       }
-
 if { simbolo = simb_if;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" if ");
@@ -248,12 +230,6 @@ not { simbolo = simb_not;
        IMPRIME(" not ");
        return NOT;
        }
-
-\.\. { simbolo = simb_pontos;
-        strncpy (token, yytext, TAM_TOKEN);
-        IMPRIME(" pontos ");
-        return PONTOS;
-        }
 
 %%
 
