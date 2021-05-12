@@ -171,18 +171,6 @@ goto { simbolo = simb_goto;
        return FECHA_COLCHETES;
        }
 
-\{ { simbolo = simb_abre_chaves;
-       strncpy (token, yytext, TAM_TOKEN);
-       IMPRIME(" abre_chaves ");
-       return ABRE_CHAVES;
-       }
-
-\} { simbolo = simb_fecha_chaves;
-       strncpy (token, yytext, TAM_TOKEN);
-       IMPRIME(" fecha_chaves ");
-       return FECHA_CHAVES;
-       }
-
 if { simbolo = simb_if;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" if ");
