@@ -56,6 +56,13 @@ end { simbolo = simb_end;
           return T_END;
  }
 
+label { simbolo = simb_label;
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME(" label ");
+        return LABEL;
+        }
+
+
 := { simbolo = simb_atribuicao;  
           strncpy (token, yytext, TAM_TOKEN);
           IMPRIME(" atribuicao  ");
@@ -105,12 +112,6 @@ end { simbolo = simb_end;
           return IDENT;
         }
 
-label { simbolo = simb_label;
-        strncpy (token, yytext, TAM_TOKEN);
-        IMPRIME(" label ");
-        return LABEL;
-        }
-
 procedure { simbolo = simb_procedure;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" procedure ");
@@ -132,7 +133,7 @@ goto { simbolo = simb_goto;
 \+ { simbolo = simb_adicao;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" adicao ");
-       return ;
+       return ADICAO;
        }
 
 \- { simbolo = simb_subtracao;
@@ -204,7 +205,7 @@ do { simbolo = simb_do;
 or { simbolo = simb_or;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" or ");
-       return or;
+       return OR;
        }
 
 and { simbolo = simb_and;
@@ -245,19 +246,19 @@ mod { simbolo = simb_mod;
 
 \<= { simbolo = simb_menor_ou_igual;
 			strncpy (token, yytext, TAM_TOKEN);
-			IMRPIME(" menor ou igual ");
+			IMPRIME(" menor ou igual ");
 			return MENOR_OU_IGUAL;
 		}
 
 \>= { simbolo = simb_maior_ou_igual;
 			strncpy (token, yytext, TAM_TOKEN);
-			IMRPIME(" maior ou igual ");
+			IMPRIME(" maior ou igual ");
 			return MAIOR_OU_IGUAL;
 		}
 
 \<> { simbolo = simb_diferente;
 			strncpy (token, yytext, TAM_TOKEN);
-			IMRPIME(" diferente ");
+			IMPRIME(" diferente ");
 			return DIFERENTE;
 		}
 
