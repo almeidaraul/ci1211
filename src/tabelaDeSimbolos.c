@@ -1,8 +1,8 @@
 #include "tabelaDeSimbolos.h"
 
 void insere(t_tds* tds, nodo_simbolo* elemento) {
-	elemento->proximo = &tds->cabeca;
-	tds->cabeca = &elemento;
+	elemento->proximo = tds->cabeca; //&
+	tds->cabeca = elemento; //&
 	tds->tamanho++;
 }
 
@@ -48,5 +48,15 @@ nodo_simbolo *var_simples_nodo(char *token, int nivel, int deslocamento) {
 	n->ident = token;
 	n->nivel = nivel;
 	n->deslocamento = deslocamento;
+	n->cat = VARSIMPLES;
+	n->tipo = INDEFINIDO;
 	return n;
+}
+
+void atualizar_tipos(t_tds *t, int qtd, t_var tipo) {
+	nodo_simbolo* n = t->cabeca;
+	while (n && qtd--) {
+		n->tipo = tipo;
+		n = n->proximo;
+	}
 }

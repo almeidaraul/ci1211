@@ -12,7 +12,7 @@
 #include "tabelaDeSimbolos.h"
 
 t_tds tds;
-nodo_simbolo *novo_nodo;
+nodo_simbolo *nodo_tds;
 int num_vars, nivel, deslocamento;
 char total_vars[12], novo_comando[33];
 
@@ -24,12 +24,14 @@ int geraCodigo();
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES 
 %token VIRGULA PONTO_E_VIRGULA DOIS_PONTOS PONTO
-%token T_BEGIN T_END VAR IDENT ATRIBUICAO
+%token T_BEGIN T_END VAR IDENT 
+%token ATRIBUICAO
 %token LABEL FUNCTION GOTO PROCEDURE
 %token SUBTRACAO MULTIPLICACAO DIVISAO ADICAO
 %token MAIOR IGUAL MOD NOT MAIOR_OU_IGUAL MENOR_OU_IGUAL MENOR
 %token DIVISAO_INTEIRA ABRE_COLCHETES FECHA_COLCHETES IF THEN
 %token ELSE WHILE DO OR AND DIFERENTE
+%token INTEGER BOOLEAN
 
 %%
 
@@ -78,20 +80,21 @@ declara_var : { num_vars = 0; }
               PONTO_E_VIRGULA
 ;
 
-tipo        : IDENT
+tipo        : INTEGER { atualizar_tipos(&tds, num_vars, INTEIRO); }
+							| BOOLEAN { atualizar_tipos(&tds, num_vars, BOOLEANO); }
 ;
 
 lista_id_var: lista_id_var VIRGULA IDENT 
               {
 								num_vars++;
-								novo_nodo = var_simples_nodo(token, nivel, deslocamento);
-								insere(&tds, novo_nodo);
+								nodo_tds = var_simples_nodo(token, nivel, deslocamento);
+								insere(&tds, nodo_tds);
 								deslocamento++;
 							}
             | IDENT {
 								num_vars++;
-								novo_nodo = var_simples_nodo(token, nivel, deslocamento);
-								insere(&tds, novo_nodo);
+								nodo_tds = var_simples_nodo(token, nivel, deslocamento);
+								insere(&tds, nodo_tds);
 								deslocamento++;
 							}
 ;
@@ -103,8 +106,74 @@ lista_idents: lista_idents VIRGULA IDENT
 
 comando_composto: T_BEGIN comandos T_END 
 
-comandos:    
+comandos:
+				{
+					nodo_tds = busca(&tds, token);
+					if (!nodo_tds) {
+						fprintf(stderr, "Variável não encontrada");
+						exit(1);
+					}
+				} comando_atribuicao
 ;
+
+comando_atribuicao: IDENT ATRIBUICAO expressao
+;
+
+//regra 24
+lista_expressoes: expressao | lista_expressoes VIRGULA expressao
+;
+
+//regra 25
+expressao: expressao_simples
+				 	 | expressao_simples relacao expressao_simples
+;
+
+//regra 26
+relacao: IGUAL | DIFERENTE | MENOR | MENOR_OU_IGUAL | MAIOR | MAIOR_OU_IGUAL
+; 
+
+//regra 27
+//co: colchetes, ch: chaves, pa: parenteses
+expressao_simples: co_add_sub termo ch_expressao_simples
+;
+
+co_add_sub: ADICAO | SUBTRACAO | regra_vazia
+;
+
+ch_expressao_simples: pa_add_sub_or termo
+											| ch_expressao_simples pa_add_sub_or termo
+;
+
+pa_add_sub_or: ADICAO | SUBTRACAO | OR
+;
+
+//regra 28
+termo: fator ch_termo
+;
+
+ch_termo: pa_mult_div_and fator ch_termo | regra_vazia
+;
+
+pa_mult_div_and: MULTIPLICACAO | DIVISAO_INTEIRA | AND;
+
+//regra 29
+fator: variavel | numero | chama_funcao | ABRE_PARENTESES expressao FECHA_PARENTESES | NOT fator
+;
+
+//regra 30
+variavel: IDENT | IDENT lista_expressoes
+;
+
+//regra 31 (TODO)
+chama_funcao: variavel;
+
+//regra 32
+numero: digito | numero digito;
+
+//regra 33 (TODO)
+digito: chama_funcao
+
+regra_vazia:;
 
 
 %%

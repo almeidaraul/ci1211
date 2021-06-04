@@ -82,7 +82,9 @@ extern int yydebug;
     DO = 292,
     OR = 293,
     AND = 294,
-    DIFERENTE = 295
+    DIFERENTE = 295,
+    INTEGER = 296,
+    BOOLEAN = 297
   };
 #endif
 

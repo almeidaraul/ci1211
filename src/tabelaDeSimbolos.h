@@ -39,3 +39,4 @@ int tds_vazia(t_tds* tds);
 void inicializaTDS(t_tds* tds);
 void encerraTDS(t_tds* t);
 nodo_simbolo *var_simples_nodo(char *token, int nivel, int deslocamento);
+void atualizar_tipos(t_tds *t, int qtd, t_var tipo);
