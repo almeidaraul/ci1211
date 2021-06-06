@@ -1,3 +1,5 @@
      INPP
-     AMEM 2
-     PARA
+     AMEM 4
+     CRTC 2
+     ARMZ 0, 3
+     DMEM 4

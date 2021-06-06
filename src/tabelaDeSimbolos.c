@@ -9,20 +9,27 @@ void insere(t_tds* tds, nodo_simbolo* elemento) {
 nodo_simbolo *busca(t_tds* t, char* ident) {
 	nodo_simbolo* n = t->cabeca;
 	int i = 0;
-	while ((i < t->tamanho) && (!strcmp(ident, n->ident)))
+	while ((i < t->tamanho) && (!strcmp(ident, n->ident))) {
 		n = n->proximo;
-	return n->proximo;
+		i++;
+	}
+	return n;
 }
 
 t_tds* retira(t_tds* t, int n) {
-	t_tds* u = (t_tds*) malloc(sizeof(t_tds));
+	//t_tds* u = (t_tds*) malloc(sizeof(t_tds));
 
 	int qtd = t->tamanho > n ? n : t->tamanho;
+	nodo_simbolo *aux;
 	while (qtd--) {
-		insere(u, t->cabeca);
+		aux = t->cabeca;
+		//insere(u, t->cabeca);
 		t->cabeca = t->cabeca->proximo;
+		free(aux);
+		t->tamanho--;
 	}
-	return u;
+	//return u;
+	return NULL;
 }
 
 int tds_vazia(t_tds* tds) { return tds->tamanho == 0; }
@@ -36,8 +43,11 @@ void inicializaTDS(t_tds* tds) {
 void encerraTDS(t_tds* t) {
 	nodo_simbolo* n;
 	while (t->tamanho > 0) {
+		printf("cabecaaa %d\n", t->cabeca);
+		printf("cabeca: %d, proximo: %d\n", t->cabeca, t->cabeca->proximo);
 		t->tamanho--;
 		n = t->cabeca;
+		t->cabeca = t->cabeca->proximo;
 		free(n);
 	}
 	free(t);
@@ -45,7 +55,8 @@ void encerraTDS(t_tds* t) {
 
 nodo_simbolo *var_simples_nodo(char *token, int nivel, int deslocamento) {
 	nodo_simbolo *n = (nodo_simbolo*) malloc(sizeof(nodo_simbolo));
-	n->ident = token;
+	n->ident = malloc(sizeof(token));
+	strcpy(n->ident, token);
 	n->nivel = nivel;
 	n->deslocamento = deslocamento;
 	n->cat = VARSIMPLES;

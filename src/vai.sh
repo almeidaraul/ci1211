@@ -1,4 +1,4 @@
 #!/bin/bash
 make
-./compilador < a.pas
+./compilador a.pas
 cat MEPA

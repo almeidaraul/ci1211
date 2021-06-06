@@ -1,6 +1,6 @@
 program exemplo75 (input, output);
-var m,n :  integer;
+var a, b: integer;
+		c, d: boolean;
 begin    
-	m := 2;
+	a := 2;
 end.
-

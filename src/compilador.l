@@ -124,6 +124,12 @@ boolean { simbolo = simb_boolean;
           return IDENT;
         }
 
+{numero} { simbolo = simb_numero; 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" numero  ");
+          return NUMERO;
+        }
+
 procedure { simbolo = simb_procedure;
        strncpy (token, yytext, TAM_TOKEN);
        IMPRIME(" procedure ");
