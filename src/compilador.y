@@ -13,6 +13,8 @@
 
 t_tds tds;
 nodo_simbolo *nodo_tds;
+int nivel_destino, deslocamento_destino, operacao = -1;
+int sign = 0;
 int novas_vars, num_vars, nivel, deslocamento;
 char info_comando[23], novo_comando[33];
 
@@ -25,6 +27,58 @@ void geraCRVL() {
 	sprintf(info_comando, "%d, %d", nodo_tds->nivel, nodo_tds->deslocamento);
 	strcat(novo_comando, info_comando);
 	geraCodigo(NULL, novo_comando);
+}
+
+void geraSinal(int sign) {
+	if (sign)
+		geraCodigo(NULL, "INVR \0");
+}
+
+void geraOperacao(int op) {
+	switch (op) {
+		case 0: //=
+			geraCodigo(NULL, "CMIG \0");
+			break;
+		case 1: //<>
+			geraCodigo(NULL, "CMDG \0");
+			break;
+		case 2: //<
+			geraCodigo(NULL, "CMME \0");
+			break;
+		case 3: //<=
+			geraCodigo(NULL, "CMEG \0");
+			break;
+		case 4: //>
+			geraCodigo(NULL, "CMMA \0");
+			break;
+		case 5: //>=
+			geraCodigo(NULL, "CMAG \0");
+			break;
+		case 6: //+
+			geraCodigo(NULL, "SOMA \0");
+			break;
+		case 7: //-
+			geraCodigo(NULL, "SUBT \0");
+			break;
+		case 8: //*
+			geraCodigo(NULL, "MULT \0");
+			break;
+		case 9: ///
+			geraCodigo(NULL, "DIVI \0");
+			break;
+		case 10: //&&
+			geraCodigo(NULL, "CONJ \0");
+			break;
+		case 11: //||
+			geraCodigo(NULL, "DISJ \0");
+			break;
+		case 12: //!
+			geraCodigo(NULL, "NEGA \0");
+			break;
+		default:
+			break;
+	}
+	operacao = -1;
 }
 
 %}
@@ -131,88 +185,89 @@ comando_sem_rotulo: atribuicao | chama_procedimento | desvio | comando_composto 
 
 
 //regra 19
-//TODO: atribuir o valor no topo da pilha a IDENT (no endereço léxico certo)
 atribuicao: 
-					variavel ATRIBUICAO expressao {
+					variavel {
+						nivel_destino = nodo_tds->nivel;
+						deslocamento_destino = nodo_tds->deslocamento;
+					}
+					ATRIBUICAO expressao {
 					strcpy(novo_comando, "ARMZ \0");
-					sprintf(info_comando, "%d, %d", nodo_tds->nivel, nodo_tds->deslocamento);
+					sprintf(info_comando, "%d, %d", nivel_destino, deslocamento_destino);
 					strcat(novo_comando, info_comando);
 					geraCodigo(NULL, novo_comando);
 				}
 				PONTO_E_VIRGULA
 ;
 
-//regra 24
-lista_expressoes: expressao | lista_expressoes VIRGULA expressao
-;
-
 //regra 25 (aqui n precisa empilhar nada, ela so serve pra chamar as outras)
 expressao: expressao_simples
-				 	 | expressao_simples relacao expressao_simples
+				 	 | expressao_simples relacao expressao_simples { geraOperacao(operacao); }
 ;
 
 //regra 26
-//TODO: fazer a operação entre os dois ultimos elementos da pilha
-relacao: IGUAL | DIFERENTE | MENOR | MENOR_OU_IGUAL | MAIOR | MAIOR_OU_IGUAL
+relacao: IGUAL { operacao = 0; }
+			  | DIFERENTE { operacao = 1; }
+				| MENOR { operacao = 2; }
+				| MENOR_OU_IGUAL { operacao = 3; }
+				| MAIOR { operacao = 4; }
+				| MAIOR_OU_IGUAL { operacao = 5; }
 ; 
 
 //regra 27
 //co: colchetes, ch: chaves, pa: parenteses
-//TODO: +- do co_add_sub (seta uma variavel "sign" ou sla)
+//TODO: 
+//		DONE +- do co_add_sub (seta uma variavel "sign" ou sla)
 //		fazer a expressao simples contra o primeiro termo
-//		+-or do pa_add_sub_or (seta a variavel "op")
-//		ver se ajusto ch_expressao_simples (e todos os outros ch_) caso seja 0+ em vez de 1+ ocorrências
-//		colocar a operação do ch_expressao_simples na pilha ([topo da pilha MEPA] (+,-,|) termo)	
-expressao_simples: co_add_sub termo ch_expressao_simples
+//		DONE +-or do pa_add_sub_or (seta a variavel "op")
+//		DONE ver se ajusto ch_expressao_simples (e todos os outros ch_) caso seja 0+ em vez de 1+ ocorrências
+//		DONE colocar a operação do ch_expressao_simples na pilha ([topo da pilha MEPA] (+,-,|) termo)	
+expressao_simples: co_add_sub termo { geraSinal(sign); } ch_expressao_simples { geraOperacao(operacao); }
 ;
 
-co_add_sub: ADICAO | SUBTRACAO | regra_vazia
+co_add_sub: ADICAO { sign = 0; } | SUBTRACAO { sign = 1; } | regra_vazia
 ;
 
-ch_expressao_simples: ch_expressao_simples pa_add_sub_or termo | regra_vazia
+//TODO
+ch_expressao_simples: co_expressao_simples pa_add_sub_or termo { geraOperacao(operacao); }
 ;
 
-pa_add_sub_or: ADICAO | SUBTRACAO | OR
+co_expressao_simples: co_expressao_simples pa_add_sub_or termo { geraOperacao(operacao); } | regra_vazia
+;
+
+pa_add_sub_or: ADICAO { operacao = 6; } | SUBTRACAO { operacao = 7;} | OR { operacao = 11;}
 ;
 
 //regra 28
-//TODO: multiplicar, dividir ou ANDar o último valor da pilha (a pilha da MEPA, não a TDS) pelo novo fator (na regra ch_termo)
-//isso talvez implique em expandir a ch_termo em vez de usar a pa_mult_div_and (ou simplesmente guarda uma variável "op" pra saber o que fazer, ou faz umas funções e a variável op é um ponteiro pra função)
-termo: fator ch_termo
+termo: fator  ch_termo
 ;
 
-ch_termo: ch_termo pa_mult_div_and fator | regra_vazia
+ch_termo: { printf("\n\nantes\n"); } co_termo { printf("\n\naqui\n\n"); } pa_mult_div_and fator { geraOperacao(operacao); }
 ;
 
-pa_mult_div_and: MULTIPLICACAO | DIVISAO_INTEIRA | AND;
+co_termo: pa_mult_div_and fator { geraOperacao(operacao); } co_termo | regra_vazia { printf("\ntegrafazvai\n"); }
+;
+
+pa_mult_div_and: MULTIPLICACAO { operacao = 8; }
+							 	 | DIVISAO_INTEIRA { operacao = 9; }
+								 | AND { operacao = 10; }
+;
 
 //regra 29
-//TODO: negar o valor do fator carregado (no caso do NOT fator)
-fator: variavel { geraCRVL(); }
+fator: variavel { geraCRVL(); geraOperacao(operacao); }
 		 	 | numero
 			 | chama_funcao
 			 | ABRE_PARENTESES expressao FECHA_PARENTESES
-			 | NOT fator
+			 | NOT { operacao = 12; } fator
 ;
 
 //regra 30
-//TODO: carregar valor da variavel
 variavel: IDENT {
 						nodo_tds = busca(&tds, token);
 						if (!nodo_tds) {
 							fprintf(stderr, "Variável não encontrada");
 							exit(1);
 						}
-					} | {} IDENT {
-					nodo_tds = busca(&tds, token);
-					if (!nodo_tds) {
-						fprintf(stderr, "Variável não encontrada");
-						exit(1);
 					}
-				} lista_expressoes_ou_vazia
-;
-
-lista_expressoes_ou_vazia: lista_expressoes | regra_vazia
 ;
 
 //regra 31 (TODO)
@@ -220,7 +275,7 @@ chama_funcao: FUNCTION;
 
 //regra 32
 numero: NUMERO {
-			strcpy(novo_comando, "CRTC \0");
+			strcpy(novo_comando, "CRCT \0");
 			strcat(novo_comando, token);
 			geraCodigo(NULL, novo_comando);
 			};
