@@ -53,9 +53,6 @@ programa    :{
 							sprintf(info_comando, "%d", num_vars);
 							strcat(novo_comando, info_comando);
 							geraCodigo(NULL, novo_comando);
-							printf("to aqui\n");
-							encerraTDS(&tds);
-							printf("saiuuu\n");
              geraCodigo (NULL, "PARA"); 
              }
 ;
@@ -206,7 +203,7 @@ variavel: IDENT {
 							fprintf(stderr, "Variável não encontrada");
 							exit(1);
 						}
-					} | IDENT {
+					} | {} IDENT {
 					nodo_tds = busca(&tds, token);
 					if (!nodo_tds) {
 						fprintf(stderr, "Variável não encontrada");
@@ -262,7 +259,6 @@ int main (int argc, char** argv) {
    novas_vars = num_vars = nivel = deslocamento = 0;
    yyin=fp;
    yyparse();
-
    return 0;
 }
 
